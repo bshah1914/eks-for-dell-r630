@@ -1,0 +1,27 @@
+# --- ESXi Connection (FILL THESE IN) ---
+vsphere_server   = "192.168.1.100"        # Your ESXi IP
+vsphere_user     = "root"                  # Your ESXi username
+vsphere_password = "your-esxi-password"    # Your ESXi password
+esxi_host        = "192.168.1.100"         # Same as vsphere_server for standalone ESXi
+
+# --- Infrastructure ---
+datacenter  = "ha-datacenter"              # Default for standalone ESXi
+datastore   = "datastore1"                 # Your datastore name
+network     = "VM Network"                 # Your port group name
+vm_template = "ubuntu-2204-template"       # Template name (create this first)
+
+# --- Network ---
+gateway     = "192.168.1.1"
+dns_servers = ["8.8.8.8", "8.8.4.4"]
+subnet_mask = 24
+domain      = "homelab.local"
+
+# --- VM IP Addresses (adjust to your subnet) ---
+k8s_master_ip   = "192.168.1.10"
+k8s_worker_1_ip = "192.168.1.11"
+k8s_worker_2_ip = "192.168.1.12"
+ollama_ip       = "192.168.1.20"
+database_ip     = "192.168.1.30"
+devops_ip       = "192.168.1.40"
+monitoring_ip   = "192.168.1.50"
+productivity_ip = "192.168.1.60"

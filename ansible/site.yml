@@ -1,0 +1,24 @@
+---
+- name: Common setup for all VMs
+  hosts: all
+  become: true
+  roles:
+    - common
+
+- name: Install Docker on service VMs
+  hosts: docker_hosts
+  become: true
+  roles:
+    - docker
+
+- name: Setup Kubernetes master
+  hosts: k8s_master
+  become: true
+  roles:
+    - k8s-master
+
+- name: Setup Kubernetes workers
+  hosts: k8s_workers
+  become: true
+  roles:
+    - k8s-worker

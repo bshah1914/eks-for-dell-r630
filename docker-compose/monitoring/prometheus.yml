@@ -1,0 +1,33 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "node-exporter"
+    static_configs:
+      - targets:
+          - "192.168.50.10:9100"   # k8s-master
+          - "192.168.50.11:9100"   # k8s-worker-1
+          - "192.168.50.12:9100"   # k8s-worker-2
+          - "192.168.50.20:9100"   # ollama
+          - "192.168.50.30:9100"   # database
+          - "192.168.50.40:9100"   # devops
+          - "192.168.50.50:9100"   # monitoring
+          - "192.168.50.60:9100"   # productivity
+
+  - job_name: "ollama"
+    static_configs:
+      - targets: ["192.168.50.20:11434"]
+
+  - job_name: "postgres"
+    static_configs:
+      - targets: ["192.168.50.30:9187"]
+
+  - job_name: "gitlab"
+    metrics_path: "/-/metrics"
+    static_configs:
+      - targets: ["192.168.50.40:80"]

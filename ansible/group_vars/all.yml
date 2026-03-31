@@ -1,0 +1,21 @@
+---
+# Common settings
+timezone: "America/New_York"
+ntp_servers:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+
+# DNS
+dns_domain: homelab.local
+
+# Docker
+docker_version: "24.0"
+
+# Kubernetes
+k8s_version: "1.29"
+k8s_pod_network_cidr: "10.244.0.0/16"
+k8s_service_cidr: "10.96.0.0/12"
+k8s_master_ip: "192.168.50.10"
+
+# MetalLB IP range for load balancer
+metallb_ip_range: "192.168.50.200-192.168.50.250"

@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  wikijs:
+    image: ghcr.io/requarks/wiki:2
+    container_name: wikijs
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: ${DATABASE_HOST:-192.168.50.30}
+      DB_PORT: 5432
+      DB_USER: wikijs
+      DB_PASS: wikijs_password
+      DB_NAME: wikijs
+
+  vikunja:
+    image: vikunja/vikunja:latest
+    container_name: vikunja
+    restart: unless-stopped
+    ports:
+      - "3456:3456"
+    volumes:
+      - vikunja_data:/app/vikunja/files
+    environment:
+      VIKUNJA_DATABASE_TYPE: postgres
+      VIKUNJA_DATABASE_HOST: ${DATABASE_HOST:-192.168.50.30}
+      VIKUNJA_DATABASE_DATABASE: vikunja
+      VIKUNJA_DATABASE_USER: admin
+      VIKUNJA_DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+
+  nginx-proxy:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy-manager
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "81:81"
+      - "443:443"
+    volumes:
+      - npm_data:/data
+      - npm_letsencrypt:/etc/letsencrypt
+
+volumes:
+  vikunja_data:
+  npm_data:
+  npm_letsencrypt:

@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    restart: unless-stopped
+    hostname: gitlab.homelab.local
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2222:22"
+    volumes:
+      - gitlab_config:/etc/gitlab
+      - gitlab_logs:/var/log/gitlab
+      - gitlab_data:/var/opt/gitlab
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab.homelab.local'
+        gitlab_rails['db_adapter'] = 'postgresql'
+        gitlab_rails['db_host'] = '${DATABASE_HOST:-192.168.50.30}'
+        gitlab_rails['db_port'] = 5432
+        gitlab_rails['db_database'] = 'gitlabdb'
+        gitlab_rails['db_username'] = 'gitlab'
+        gitlab_rails['db_password'] = 'gitlab_password'
+        postgresql['enable'] = false
+        redis['enable'] = false
+        gitlab_rails['redis_host'] = '${DATABASE_HOST:-192.168.50.30}'
+        gitlab_rails['redis_port'] = 6379
+        # Performance tuning
+        puma['workers'] = 2
+        sidekiq['concurrency'] = 10
+        prometheus_monitoring['enable'] = true
+    shm_size: "256m"
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner
+    restart: unless-stopped
+    volumes:
+      - runner_config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - gitlab
+
+volumes:
+  gitlab_config:
+  gitlab_logs:
+  gitlab_data:
+  runner_config:

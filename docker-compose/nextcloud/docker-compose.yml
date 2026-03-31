@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  nextcloud:
+    image: nextcloud:latest
+    container_name: nextcloud
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - nextcloud_data:/var/www/html
+      - nextcloud_files:/var/www/html/data
+    environment:
+      POSTGRES_HOST: ${DATABASE_HOST:-192.168.50.30}
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: nextcloud
+      POSTGRES_PASSWORD: nextcloud_password
+      REDIS_HOST: ${DATABASE_HOST:-192.168.50.30}
+      REDIS_HOST_PORT: 6379
+      NEXTCLOUD_ADMIN_USER: admin
+      NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_ADMIN_PASSWORD:-changeme}
+      NEXTCLOUD_TRUSTED_DOMAINS: "cloud.homelab.local 192.168.1.60"
+      OVERWRITEPROTOCOL: http
+
+  collabora:
+    image: collabora/code:latest
+    container_name: collabora
+    restart: unless-stopped
+    ports:
+      - "9980:9980"
+    environment:
+      - domain=cloud.homelab.local
+      - extra_params=--o:ssl.enable=false
+    cap_add:
+      - MKNOD
+
+volumes:
+  nextcloud_data:
+  nextcloud_files:
